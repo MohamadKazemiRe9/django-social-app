@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    create image
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Create an image</h1>
+                <hr>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <input type="submit" class="btn btn-primary" value="Create">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+    

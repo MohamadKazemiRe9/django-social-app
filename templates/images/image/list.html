@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    images list     
+{% endblock title %}
+
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Images List</h1>
+            <hr>
+            <div id="image-list">
+                {% include "images/image/list_ajax.html" %}
+            </div>
+            <button class="btn btn-outline-primary" id="see-more">See more</button>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    
+{% block domready %}
+let page = 1;
+let emptyPage = false;
+let blockRequest = false;
+
+$(window).scroll(function(){
+    let margin = $(document).height() - $(window).height() - 200;
+    if($(window).scrollTop() > margin && emptyPage == false && blockRequest == false){
+        blockRequest = true;
+        page += 1;
+        $.get('?page='+page,function(data){
+            if(data==""){
+                empty_page=true;
+            }else{
+                blockRequest = false;
+                $('#image-list').append(data);
+            }
+        });
+    }
+});
+
+$('#see-more').click(function(){
+    if(emptyPage == false && blockRequest == false){
+        blockRequest = true;
+        page += 1;
+        $.get('?page='+page,function(data){
+            if(data==""){
+                empty_page=true;
+            }else{
+                blockRequest = false;
+                $('#image-list').append(data);
+            }
+        });
+    }
+})
+
+{% endblock domready %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}
+  {{image.slug}}
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col col-md-6">
+            <h1>{{image.title}}</h1>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <!-- <img src="{{image.image.url}}" alt="" width="100%"> -->
+                    <img src="{% thumbnail image.image 300x0 crop %}" alt="" width="">
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            {% with total_like=image.user_like.count users_like=image.user_like.all %}
+                                {% if total_like > 1 %}
+                                    <button class="btn btn-outline-primary" disabled><span class="total">{{total_like}}</span> likes</button>
+                                {% else %}
+                                    <button class="btn btn-outline-primary" disabled><span class="total">{{total_like}}</span> like</button>
+                                {% endif %}
+                                
+                            {% endwith %}
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-outline-success" disabled>{{total_view}} view</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span class="user_liked mt-3">
+                                <small>liked by :</small>
+                                {% for user in image.user_like.all %}
+                                    <small> <b>{{user.username}} ,</b></small>                           
+                                {% endfor %}
+                                </span> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mt-4">
+                            {{image.description}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            posted by : {{image.user.first_name}} {{image.user.last_name}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col mt-3">
+                    <a href="#" data-id="{{image.id}}" data-action="{% if request.user in image.user_like.all %}un{% endif %}like" class="btn btn-primary like w-100">
+                        
+                        {% if request.user not in image.user_like.all %}
+                            Like
+                        {% else %}
+                            Unlike
+                        {% endif %}
+                            
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    
+
+{% block domready %}
+    $('a.like').click(function(e){
+
+        e.preventDefault();
+        $.post('{% url "images:like" %}',
+        {
+            id: $(this).data('id'),
+            action: $(this).data('action')
+        },
+        function(data){
+            if (data['status'] == 'ok'){
+
+                let previous_action = $('a.like').data('action');
+                $('a.like').data('action',previous_action == 'like'?'unlike':'like');
+                $('a.like').text(previous_action == 'like'?"unlike":'like');
+
+                let previuos_likes = parseInt($('span.total').text());
+                $('span.total').text(previous_action == 'like'?previuos_likes + 1 : previuos_likes -1);
+
+            }
+        }
+        )
+    })
+{% endblock domready %}
+    

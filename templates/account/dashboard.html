@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col mt-5">
+            <h1>Dashboard</h1>
+            <p>You can also <a href="{% url 'edit' %}">edit your profile</a>
+                or <a href="{% url 'password_change' %}">change your password</a>.</p>
+            <hr>
+            <h2>Actions : </h2>
+            {% for action in actions %}
+                {% include "actions/action/detail.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

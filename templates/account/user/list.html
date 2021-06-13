@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}
+  List of users
+{% endblock title %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h1>List of Users</h1>
+            <hr>
+            <div class="col-4">
+                <div id="people-list">
+                    {% for user in users %}
+                    <div class="user">
+                        <div class="row">
+                            <div class="col my-2">
+                                <a href="{{user.get_absolute_url}}">
+                                    <img src="{% thumbnail user.profile.photo 150x150 crop %}" alt="">
+                                </a>
+                            </div>
+                            <div class="col">
+                                <span class="text-decoration-none"><b>{{user}}</b></span>
+                                <div class="info"> 
+                                    <a href="{{ user.get_absolute_url }}" class="title text-decoration-none text-secondary"> 
+                                        {{ user.get_full_name }} 
+                                    </a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+    
